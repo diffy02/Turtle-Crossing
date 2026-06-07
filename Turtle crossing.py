@@ -2,6 +2,7 @@ import turtle
 import time
 import random
 from Roads import Road
+from Forest import Tree
 
 screen = turtle.Screen()
 turtle.colormode(255)
@@ -15,8 +16,6 @@ timmy.color((37,105,46))
 timmy.setheading(90)
 timmy.penup()
 timmy.goto(0,-350)
-
-road_place_y = [175,-175]
 
 move_loop1 = False
 move_loop2 = False
@@ -52,29 +51,58 @@ def movement_down():
         timmy.forward(5)
         screen.ontimer(movement_down,10)
 
-screen.listen()
-screen.onkeypress(move_go,'w')
-screen.onkeyrelease(move_stop,'w')
-
-screen.onkeypress(down_go,'s')
-screen.onkeyrelease(down_stop,'s')
-
 max_road = 2
-roads = []
-new_road = Road()
+road_list = []
+road_place_y = [175,-175]
+for a in range(max_road):
+    new_road = Road()
 
-for count in range(max_road):
-    random_x = random.randint(-420,-420)
-    random_y = random.choice(road_place_y)
+    random_x1 = random.randint(-420,-420)
+    random_y1 = road_place_y[a]
 
-    new_road.goto(random_x, random_y)
+    new_road.goto(random_x1, random_y1)
     new_road.draw()
-    roads.append(new_road)
+    road_list.append(new_road)
+
+tree_quantity1 = [10,11,12,13,14,15]
+tree_list1 = []
+tree_list2 = []
+
+for b in range(random.choice(tree_quantity1)):
+    new_tree = Tree()
+
+    random_x2 = random.randint(-400,400)
+    random_y2 = random.randint(-375,-325)
+
+    new_tree.penup()
+    new_tree.goto(random_x2, random_y2)
+    new_tree.pendown()
+    new_tree.draw()
+    tree_list1.append(new_tree)
+
+for c in range(random.choice(tree_quantity1)):
+    new_tree = Tree()
+
+    random_x2 = random.randint(-400,400)
+    random_y2 = random.randint(335,375)
+
+    new_tree.penup()
+    new_tree.goto(random_x2, random_y2)
+    new_tree.pendown()
+    new_tree.draw()
+    tree_list2.append(new_tree)
 
 game = True
 while game:
     screen.update()
     time.sleep(0.05)
-turtle.done()
 
+    screen.listen()
+    screen.onkeypress(move_go, 'w')
+    screen.onkeyrelease(move_stop, 'w')
+
+    screen.onkeypress(down_go, 's')
+    screen.onkeyrelease(down_stop, 's')
+
+turtle.done()
 #test adding new code lines
