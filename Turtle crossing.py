@@ -1,9 +1,11 @@
 import turtle
-import random
 import time
+import random
+from Roads import Road
 
 screen = turtle.Screen()
 turtle.colormode(255)
+screen.setup(width=750,height=750)
 screen.bgcolor((83,235,104))
 screen.tracer(0)
 
@@ -13,6 +15,8 @@ timmy.color((37,105,46))
 timmy.setheading(90)
 timmy.penup()
 timmy.goto(0,-350)
+
+road_place_y = [175,-175]
 
 move_loop1 = False
 move_loop2 = False
@@ -54,6 +58,18 @@ screen.onkeyrelease(move_stop,'w')
 
 screen.onkeypress(down_go,'s')
 screen.onkeyrelease(down_stop,'s')
+
+max_road = 2
+roads = []
+new_road = Road()
+
+for count in range(max_road):
+    random_x = random.randint(-420,-420)
+    random_y = random.choice(road_place_y)
+
+    new_road.goto(random_x, random_y)
+    new_road.draw()
+    roads.append(new_road)
 
 game = True
 while game:
