@@ -122,6 +122,7 @@ while game:
 
     if timmy.ycor() == -250:
         writer.clear()
+        writer.goto(0,0)
         writer.write('Good job lol', align='center', font=("Courier New", 30, "bold"))
 
     if timmy.ycor() == -100:
