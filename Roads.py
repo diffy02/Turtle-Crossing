@@ -1,7 +1,7 @@
 import turtle
 import random
 
-pixels = [80, 90, 100, 120, 150]
+pixels = [90, 100, 120, 150]
 
 class Road(turtle.Turtle):
     def __init__(self):

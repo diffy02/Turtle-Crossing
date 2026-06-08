@@ -17,6 +17,15 @@ timmy.setheading(90)
 timmy.penup()
 timmy.goto(0,-350)
 
+writer = turtle.Turtle()
+writer.hideturtle()
+writer.penup()
+writer.color((255,255,255))
+writer.goto(0,10)
+writer.write('hold w to go up', align='center', font=("Courier New", 45, "bold"))
+writer.goto(0,-30)
+writer.write('hold s to go down', align='center', font=("Courier New", 45, "bold"))
+
 move_loop1 = False
 move_loop2 = False
 def move_go():
@@ -50,6 +59,8 @@ def movement_down():
         timmy.setheading(270)
         timmy.forward(5)
         screen.ontimer(movement_down,10)
+
+
 
 max_road = 2
 road_list = []
@@ -92,17 +103,17 @@ for c in range(random.choice(tree_quantity1)):
     new_tree.draw()
     tree_list2.append(new_tree)
 
+screen.listen()
+screen.onkeypress(move_go, 'w')
+screen.onkeyrelease(move_stop, 'w')
+
+screen.onkeypress(down_go, 's')
+screen.onkeyrelease(down_stop, 's')
+
 game = True
 while game:
     screen.update()
     time.sleep(0.05)
-
-    screen.listen()
-    screen.onkeypress(move_go, 'w')
-    screen.onkeyrelease(move_stop, 'w')
-
-    screen.onkeypress(down_go, 's')
-    screen.onkeyrelease(down_stop, 's')
 
 turtle.done()
 #test adding new code lines
