@@ -3,6 +3,7 @@ import time
 import random
 from Roads import Road
 from Forest import Tree
+from Cars import Car
 
 screen = turtle.Screen()
 turtle.colormode(255)
@@ -22,9 +23,9 @@ writer.hideturtle()
 writer.penup()
 writer.color((255,255,255))
 writer.goto(0,10)
-writer.write('hold w to go up', align='center', font=("Courier New", 45, "bold"))
+writer.write('hold w to go up', align='center', font=("Courier New", 30, "bold"))
 writer.goto(0,-30)
-writer.write('hold s to go down', align='center', font=("Courier New", 45, "bold"))
+writer.write('hold s to go down', align='center', font=("Courier New", 30, "bold"))
 
 move_loop1 = False
 move_loop2 = False
@@ -103,6 +104,8 @@ for c in range(random.choice(tree_quantity1)):
     new_tree.draw()
     tree_list2.append(new_tree)
 
+cars = Car()
+
 screen.listen()
 screen.onkeypress(move_go, 'w')
 screen.onkeyrelease(move_stop, 'w')
@@ -114,6 +117,26 @@ game = True
 while game:
     screen.update()
     time.sleep(0.05)
+    for road in road_list:
+        cars.creation(road.ycor(),road.get_height())
+
+    if timmy.ycor() == -250:
+        writer.clear()
+        writer.write('Good job lol', align='center', font=("Courier New", 30, "bold"))
+
+    if timmy.ycor() == -100:
+        writer.clear()
+        writer.write('More cars spawns \n the more levels you have completed', align='center',font=("Courier New", 20, "bold"))
+
+    if timmy.ycor() == 150:
+        writer.clear()
+        writer.write('then again, good luck!', align='center',font=("Courier New", 30, "bold"))
+
+    if timmy.ycor() == 250:
+        writer.clear()
+
+    cars.move()
+    cars.barrier()
 
 turtle.done()
 #test adding new code lines

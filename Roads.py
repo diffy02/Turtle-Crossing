@@ -22,3 +22,6 @@ class Road(turtle.Turtle):
             self.left(90)
         self.end_fill()
         self.penup()
+
+    def get_height(self):
+        return self.pick
