@@ -11,11 +11,12 @@ class Car(turtle.Turtle):
         self.speed_value = 3.5
 
     def creation(self,*args):
-        if random.randint(1,35) == 1:
+        if random.randint(1,36) == 1:
             road_y = int(args[0])
             road_height = int(args[1])
 
             new_car = turtle.Turtle()
+            new_car.hideturtle()
             new_car.shape('square')
             new_car.shapesize(stretch_len=1.5,stretch_wid=0.75)
             new_car.color((random.choice(kolors),random.choice(kolors),random.choice(kolors)))
@@ -25,6 +26,7 @@ class Car(turtle.Turtle):
 
 
             new_car.goto(450,spawn_car)
+            new_car.showturtle()
             self.car_list.append(new_car)
 
     def move(self):
@@ -36,3 +38,16 @@ class Car(turtle.Turtle):
             if car.xcor() <= -400:
                 car.hideturtle()
                 self.car_list.remove(car)
+
+    def collision(self,player):
+        for car in self.car_list:
+            if car.xcor() == 0 and car.ycor() == 0:
+                continue
+            x_location = abs(player.ycor() - car.xcor())
+            y_coordinates = abs(player.ycor() - car.ycor())
+
+            if x_location < 30 and y_coordinates < 17.5:
+                return True
+
+        else:
+            return False

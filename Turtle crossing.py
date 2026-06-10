@@ -26,6 +26,15 @@ writer.goto(0,10)
 writer.write('hold w to go up', align='center', font=("Courier New", 30, "bold"))
 writer.goto(0,-30)
 writer.write('hold s to go down', align='center', font=("Courier New", 30, "bold"))
+write_list = ['Game Over!','Unlucky...','Try again!']
+
+warning = turtle.Turtle()
+warning.hideturtle()
+warning.penup()
+warning.color((0,0,0))
+warning.goto(200,100)
+warning.write('GAME IS IN HEAVY DEVELOPMENT!', align='center', font=("Courier New", 10, "bold"))
+screen.update()
 
 move_loop1 = False
 move_loop2 = False
@@ -113,6 +122,8 @@ screen.onkeyrelease(move_stop, 'w')
 screen.onkeypress(down_go, 's')
 screen.onkeyrelease(down_stop, 's')
 
+start_intro = False
+current_level = 1
 game = True
 while game:
     screen.update()
@@ -120,21 +131,90 @@ while game:
     for road in road_list:
         cars.creation(road.ycor(),road.get_height())
 
-    if timmy.ycor() == -250:
+    if current_level == 1:
+        if timmy.ycor() > -340:
+            if timmy.ycor() >= -250 and timmy.ycor() < -240:
+                writer.clear()
+                writer.goto(0,0)
+                writer.write('Good job!', align='center', font=("Courier New", 30, "bold"))
+
+            if timmy.ycor() >= -100 and timmy.ycor() < -90:
+                writer.clear()
+                writer.write('Cars go faster \n the more levels \n you have completed', align='center',font=("Courier New", 20, "bold"))
+
+            if timmy.ycor() == 150:
+                writer.clear()
+                writer.write('then again, good luck!', align='center',font=("Courier New", 30, "bold"))
+
+            if timmy.ycor() == 250:
+                writer.clear()
+
+    if timmy.ycor() >= 400:
+        for road in road_list:
+            road.clear()
+            road.hideturtle()
+
+        for tree in tree_list1 + tree_list2:
+            tree.clear()
+            tree.hideturtle()
+
+        for kars in cars.car_list:
+            kars.clear()
+            kars.hideturtle()
+
+        road_list.clear()
+        tree_list1.clear()
+        tree_list2.clear()
+        cars.car_list.clear()
+        cars = Car()
+
+        timmy.goto(0, -350)
+        current_level += 1
+        cars.speed_value += 10
+
+        for a in range(max_road):
+            new_road = Road()
+
+            random_x1 = random.randint(-420, -420)
+            random_y1 = road_place_y[a]
+
+            new_road.goto(random_x1, random_y1)
+            new_road.draw()
+            road_list.append(new_road)
+
+        tree_quantity1 = [10, 11, 12, 13, 14, 15]
+        tree_list1 = []
+        tree_list2 = []
+
+        for b in range(random.choice(tree_quantity1)):
+            new_tree = Tree()
+
+            random_x2 = random.randint(-400, 400)
+            random_y2 = random.randint(-375, -325)
+
+            new_tree.penup()
+            new_tree.goto(random_x2, random_y2)
+            new_tree.pendown()
+            new_tree.draw()
+            tree_list1.append(new_tree)
+
+        for c in range(random.choice(tree_quantity1)):
+            new_tree = Tree()
+
+            random_x2 = random.randint(-400, 400)
+            random_y2 = random.randint(335, 375)
+
+            new_tree.penup()
+            new_tree.goto(random_x2, random_y2)
+            new_tree.pendown()
+            new_tree.draw()
+            tree_list2.append(new_tree)
+
+    if cars.collision(timmy):
+        game = False
         writer.clear()
         writer.goto(0,0)
-        writer.write('Good job lol', align='center', font=("Courier New", 30, "bold"))
-
-    if timmy.ycor() == -100:
-        writer.clear()
-        writer.write('More cars spawns \n the more levels you have completed', align='center',font=("Courier New", 20, "bold"))
-
-    if timmy.ycor() == 150:
-        writer.clear()
-        writer.write('then again, good luck!', align='center',font=("Courier New", 30, "bold"))
-
-    if timmy.ycor() == 250:
-        writer.clear()
+        writer.write(f'{random.choice(write_list)}', align='center',font=("Courier New", 30, "bold"))
 
     cars.move()
     cars.barrier()
