@@ -39,9 +39,7 @@ warning = turtle.Turtle()
 warning.hideturtle()
 warning.penup()
 warning.color((0,0,0))
-warning.goto(200,100)
-warning.write('GAME IS IN HEAVY DEVELOPMENT!', align='center', font=("Courier New", 10, "bold"))
-screen.update()
+warning.goto(200,325)
 
 move_loop1 = False
 move_loop2 = False
@@ -132,9 +130,10 @@ current_level = 1
 game = True
 while game:
     screen.update()
-    time.sleep(0.05)
+    time.sleep(0.01)
 
     level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
+    warning.write('GAME IS IN HEAVY DEVELOPMENT!', align='center', font=("Courier New", 15, "bold"))
 
     for road in road_list:
         cars.creation(road.ycor(),road.get_height())
@@ -220,8 +219,8 @@ while game:
             new_tree.draw()
             tree_list2.append(new_tree)
 
-    if current_level % 5 == 0 and current_level < 15:
-        print('hello')
+    # if current_level % 5 == 0 and current_level < 15:
+    #     print('hello')
 
     if cars.collision(timmy):
         game = False
