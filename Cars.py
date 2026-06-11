@@ -8,10 +8,11 @@ class Car(turtle.Turtle):
         super().__init__()
         self.car_list = []
         self.hideturtle()
-        self.speed_value = 3.5
+        self.speed_value = 4
+        self.chance = 40
 
     def creation(self,*args):
-        if random.randint(1,36) == 1:
+        if random.randint(1,self.chance) == 1:
             road_y = int(args[0])
             road_height = int(args[1])
 
@@ -41,13 +42,7 @@ class Car(turtle.Turtle):
 
     def collision(self,player):
         for car in self.car_list:
-            if car.xcor() == 0 and car.ycor() == 0:
-                continue
-            x_location = abs(player.ycor() - car.xcor())
-            y_coordinates = abs(player.ycor() - car.ycor())
-
-            if x_location < 30 and y_coordinates < 17.5:
+            if player.distance(car) < 20:
                 return True
 
-        else:
-            return False
+        return False

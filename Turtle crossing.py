@@ -28,6 +28,13 @@ writer.goto(0,-30)
 writer.write('hold s to go down', align='center', font=("Courier New", 30, "bold"))
 write_list = ['Game Over!','Unlucky...','Try again!']
 
+level = turtle.Turtle()
+level.hideturtle()
+level.penup()
+level.color((245,143,42))
+level.goto(-270,300)
+screen.update()
+
 warning = turtle.Turtle()
 warning.hideturtle()
 warning.penup()
@@ -51,7 +58,7 @@ def move_stop():
 def movement_up():
     if move_loop1:
         timmy.setheading(90)
-        timmy.forward(5)
+        timmy.forward(2.5)
         screen.ontimer(movement_up,10)
 
 def down_go():
@@ -67,10 +74,8 @@ def down_stop():
 def movement_down():
     if move_loop2:
         timmy.setheading(270)
-        timmy.forward(5)
+        timmy.forward(2.5)
         screen.ontimer(movement_down,10)
-
-
 
 max_road = 2
 road_list = []
@@ -128,6 +133,9 @@ game = True
 while game:
     screen.update()
     time.sleep(0.05)
+
+    level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
+
     for road in road_list:
         cars.creation(road.ycor(),road.get_height())
 
@@ -170,7 +178,9 @@ while game:
 
         timmy.goto(0, -350)
         current_level += 1
-        cars.speed_value += 10
+        cars.speed_value += 0.5
+        cars.chance -= 1
+        level.clear()
 
         for a in range(max_road):
             new_road = Road()
@@ -215,6 +225,8 @@ while game:
         writer.clear()
         writer.goto(0,0)
         writer.write(f'{random.choice(write_list)}', align='center',font=("Courier New", 30, "bold"))
+
+
 
     cars.move()
     cars.barrier()
