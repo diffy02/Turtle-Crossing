@@ -150,11 +150,11 @@ while game:
                 writer.clear()
                 writer.write('Cars go faster \n the more levels \n you have completed', align='center',font=("Courier New", 20, "bold"))
 
-            if timmy.ycor() == 150:
+            if timmy.ycor() >= 150:
                 writer.clear()
                 writer.write('then again, good luck!', align='center',font=("Courier New", 30, "bold"))
 
-            if timmy.ycor() == 250:
+            if timmy.ycor() >= 250:
                 writer.clear()
 
     if timmy.ycor() >= 400:
@@ -220,13 +220,14 @@ while game:
             new_tree.draw()
             tree_list2.append(new_tree)
 
+    if current_level % 5 == 0 and current_level < 15:
+        print('hello')
+
     if cars.collision(timmy):
         game = False
         writer.clear()
         writer.goto(0,0)
         writer.write(f'{random.choice(write_list)}', align='center',font=("Courier New", 30, "bold"))
-
-
 
     cars.move()
     cars.barrier()

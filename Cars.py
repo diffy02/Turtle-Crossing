@@ -42,7 +42,7 @@ class Car(turtle.Turtle):
 
     def collision(self,player):
         for car in self.car_list:
-            if player.distance(car) < 20:
+            if player.distance(car) < 25:
                 return True
 
         return False
