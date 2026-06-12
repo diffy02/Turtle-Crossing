@@ -127,25 +127,24 @@ screen.onkeyrelease(down_stop, 's')
 
 start_intro = False
 current_level = 1
+level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
+warning.write('GAME IS IN HEAVY DEVELOPMENT!', align='center', font=("Courier New", 15, "bold"))
 game = True
 while game:
     screen.update()
-    time.sleep(0.01)
-
-    level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
-    warning.write('GAME IS IN HEAVY DEVELOPMENT!', align='center', font=("Courier New", 15, "bold"))
+    time.sleep(0.03)
 
     for road in road_list:
         cars.creation(road.ycor(),road.get_height())
 
     if current_level == 1:
         if timmy.ycor() > -340:
-            if timmy.ycor() >= -250 and timmy.ycor() < -240:
+            if -250 <= timmy.ycor() <= -240:
                 writer.clear()
                 writer.goto(0,0)
                 writer.write('Good job!', align='center', font=("Courier New", 30, "bold"))
 
-            if timmy.ycor() >= -100 and timmy.ycor() < -90:
+            if -100 <= timmy.ycor() <= -90:
                 writer.clear()
                 writer.write('Cars go faster \n the more levels \n you have completed', align='center',font=("Courier New", 20, "bold"))
 
@@ -160,14 +159,20 @@ while game:
         for road in road_list:
             road.clear()
             road.hideturtle()
+            if road in screen.turtles():
+                screen.turtles().remove(road)
 
         for tree in tree_list1 + tree_list2:
             tree.clear()
             tree.hideturtle()
+            if tree in screen.turtles():
+                screen.turtles().remove(tree)
 
         for kars in cars.car_list:
             kars.clear()
             kars.hideturtle()
+            if kars in screen.turtles():
+                screen.turtles().remove(kars)
 
         road_list.clear()
         tree_list1.clear()
@@ -176,10 +181,9 @@ while game:
         cars = Car()
 
         timmy.goto(0, -350)
-        current_level += 1
+
         cars.speed_value += 0.5
         cars.chance -= 1
-        level.clear()
 
         for a in range(max_road):
             new_road = Road()
@@ -219,6 +223,10 @@ while game:
             new_tree.draw()
             tree_list2.append(new_tree)
 
+            level.clear()
+            current_level += 1
+            level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
+
     # if current_level % 5 == 0 and current_level < 15:
     #     print('hello')
 
@@ -226,7 +234,8 @@ while game:
         game = False
         writer.clear()
         writer.goto(0,0)
-        writer.write(f'{random.choice(write_list)}', align='center',font=("Courier New", 30, "bold"))
+        writer.color((216,72,101))
+        writer.write(f'{random.choice(write_list)}', align='center',font=("Courier New", 45, "bold"))
 
     cars.move()
     cars.barrier()

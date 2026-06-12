@@ -15,7 +15,7 @@ class Road(turtle.Turtle):
         self.pendown()
         self.fillcolor((164, 164, 164))
         self.begin_fill()
-        for i in range(2):
+        for a in range(2):
             self.forward(900)
             self.left(90)
             self.forward(self.pick)
@@ -25,3 +25,15 @@ class Road(turtle.Turtle):
 
     def get_height(self):
         return self.pick
+
+    def river(self):
+        self.pendown()
+        self.fillcolor((62,174,239))
+        self.begin_fill()
+        for b in range(2):
+            self.forward(900)
+            self.left(90)
+            self.forward(150)
+            self.left(90)
+        self.end_fill()
+        self.penup()
