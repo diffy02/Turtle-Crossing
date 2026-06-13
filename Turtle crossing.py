@@ -35,12 +35,6 @@ level.color((245,143,42))
 level.goto(-270,300)
 screen.update()
 
-warning = turtle.Turtle()
-warning.hideturtle()
-warning.penup()
-warning.color((0,0,0))
-warning.goto(200,325)
-
 move_loop1 = False
 move_loop2 = False
 def move_go():
@@ -127,10 +121,11 @@ screen.onkeyrelease(down_stop, 's')
 
 start_intro = False
 current_level = 1
+switch = True
 level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
-warning.write('GAME IS IN HEAVY DEVELOPMENT!', align='center', font=("Courier New", 15, "bold"))
 game = True
 while game:
+    global additional_road
     screen.update()
     time.sleep(0.03)
 
@@ -171,19 +166,22 @@ while game:
         for kars in cars.car_list:
             kars.clear()
             kars.hideturtle()
-            if kars in screen.turtles():
-                screen.turtles().remove(kars)
+
+        for truck in cars.truck_list:
+            truck.clear()
+            truck.hideturtle()
 
         road_list.clear()
         tree_list1.clear()
         tree_list2.clear()
         cars.car_list.clear()
+        cars.truck_list.clear()
         cars = Car()
 
         timmy.goto(0, -350)
 
-        cars.speed_value += 0.5
-        cars.chance -= 1
+        cars.speed_value1 += 0.5
+        cars.chance1 -= 1
 
         for a in range(max_road):
             new_road = Road()
@@ -223,12 +221,16 @@ while game:
             new_tree.draw()
             tree_list2.append(new_tree)
 
-            level.clear()
-            current_level += 1
-            level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
+        level.clear()
+        current_level += 1
+        level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
 
-    # if current_level % 5 == 0 and current_level < 15:
-    #     print('hello')
+    if current_level % 3 == 0 and current_level < 10 and switch:
+        switch = False
+        additional_road = Road()
+        additional_road.goto(-420, 0)
+        additional_road.draw()
+        road_list.append(additional_road)
 
     if cars.collision(timmy):
         game = False
@@ -237,8 +239,39 @@ while game:
         writer.color((216,72,101))
         writer.write(f'{random.choice(write_list)}', align='center',font=("Courier New", 45, "bold"))
 
-    cars.move()
-    cars.barrier()
+    if current_level == 10:
+        game = False
+        for road in road_list:
+            road.clear()
+            road.hideturtle()
+            if road in screen.turtles():
+                screen.turtles().remove(road)
+
+        for tree in tree_list1 + tree_list2:
+            tree.clear()
+            tree.hideturtle()
+            if tree in screen.turtles():
+                screen.turtles().remove(tree)
+
+        for kars in cars.car_list:
+            kars.clear()
+            kars.hideturtle()
+
+        level.clear()
+        road_list.clear()
+        tree_list1.clear()
+        tree_list2.clear()
+        cars.car_list.clear()
+        writer.clear()
+        screen.bgcolor((0,0,0))
+        writer.goto(0,0)
+        writer.color((255,255,255))
+        writer.write('CONGRATULATIONS! \n you are truly a \n certified turtle crosser', align='center',font=("Courier New", 30, "bold"))
+
+    cars.move1()
+    cars.move2()
+    cars.barrier1()
+    cars.barrier2()
 
 turtle.done()
 #test adding new code lines
