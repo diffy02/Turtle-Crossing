@@ -37,6 +37,8 @@ screen.update()
 
 move_loop1 = False
 move_loop2 = False
+right_loop = False
+left_loop = False
 def move_go():
     global move_loop1
     if not move_loop1:
@@ -68,6 +70,43 @@ def movement_down():
         timmy.setheading(270)
         timmy.forward(2.5)
         screen.ontimer(movement_down,10)
+
+#####################################################
+
+def right_go():
+    global right_loop
+    if not right_loop:
+        right_loop = True
+        movement_right()
+
+def right_stop():
+    global right_loop
+    right_loop = False
+
+def movement_right():
+    if right_loop:
+        timmy.setheading(0)
+        timmy.forward(2.5)
+        screen.ontimer(movement_right,10)
+
+
+def left_go():
+    global left_loop
+    if not left_loop:
+        left_loop = True
+        movement_left()
+
+
+def left_stop():
+    global left_loop
+    left_loop = False
+
+
+def movement_left():
+    if left_loop:
+        timmy.setheading(180)
+        timmy.forward(2.5)
+        screen.ontimer(movement_left, 10)
 
 max_road = 2
 road_list = []
@@ -119,9 +158,14 @@ screen.onkeyrelease(move_stop, 'w')
 screen.onkeypress(down_go, 's')
 screen.onkeyrelease(down_stop, 's')
 
+screen.onkeypress(left_go, 'a')
+screen.onkeyrelease(left_stop, 'a')
+
+screen.onkeypress(right_go, 'd')
+screen.onkeyrelease(right_stop, 'd')
+
 start_intro = False
 current_level = 1
-switch = True
 level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
 game = True
 while game:
@@ -225,12 +269,13 @@ while game:
         current_level += 1
         level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
 
-    if current_level % 3 == 0 and current_level < 10 and switch:
-        switch = False
-        additional_road = Road()
-        additional_road.goto(-420, 0)
-        additional_road.draw()
-        road_list.append(additional_road)
+        if current_level % 3 == 0 and current_level < 10:
+            additional_road = Road()
+            additional_road.goto(-420, 0)
+            additional_road.draw()
+            road_list.append(additional_road)
+            cars.speed_value1 *= 1.25
+            cars.speed_value2 *= 1.25
 
     if cars.collision(timmy):
         game = False
@@ -238,6 +283,9 @@ while game:
         writer.goto(0,0)
         writer.color((216,72,101))
         writer.write(f'{random.choice(write_list)}', align='center',font=("Courier New", 45, "bold"))
+
+    if timmy.ycor() <= -400 or timmy.xcor() >= 400 or timmy.xcor() <= -400:
+        timmy.goto(0,-350)
 
     if current_level == 10:
         game = False
@@ -256,6 +304,8 @@ while game:
         for kars in cars.car_list:
             kars.clear()
             kars.hideturtle()
+            if kars in screen.turtles():
+                screen.turtles().remove(kars)
 
         level.clear()
         road_list.clear()
