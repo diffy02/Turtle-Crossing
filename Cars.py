@@ -9,7 +9,7 @@ class Car(turtle.Turtle):
         self.car_list = []
         self.truck_list = []
         self.hideturtle()
-        self.speed_value1 = 4
+        self.speed_value1 = 6
         self.speed_value2 = 12
         self.chance1 = 45
         self.chance2 = 350
@@ -49,7 +49,6 @@ class Car(turtle.Turtle):
             new_truck.showturtle()
             self.truck_list.append(new_truck)
 
-
     def move1(self):
         for car in self.car_list:
             car.backward(self.speed_value1)
@@ -72,7 +71,7 @@ class Car(turtle.Turtle):
 
     def collision(self,player):
         for car in self.car_list:
-            if player.distance(car) < 25:
+            if player.distance(car) < 21:
                 return True
 
         return False

@@ -33,7 +33,10 @@ level.hideturtle()
 level.penup()
 level.color((245,143,42))
 level.goto(-270,300)
-screen.update()
+
+food = turtle.Turtle()
+food.penup()
+food.goto(1000,1000)
 
 move_loop1 = False
 move_loop2 = False
@@ -167,9 +170,11 @@ screen.onkeyrelease(right_stop, 'd')
 start_intro = False
 current_level = 1
 level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
+switch = False
+draw_once = True
 game = True
 while game:
-    global additional_road
+    global speed_expiration, total_speed1, total_speed2
     screen.update()
     time.sleep(0.03)
 
@@ -224,7 +229,8 @@ while game:
 
         timmy.goto(0, -350)
 
-        cars.speed_value1 += 0.5
+        total_speed1 = cars.speed_value1 + 0.5
+        total_speed2 = cars.speed_value2 + 1
         cars.chance1 -= 1
 
         for a in range(max_road):
@@ -277,6 +283,16 @@ while game:
             cars.speed_value1 *= 1.25
             cars.speed_value2 *= 1.25
 
+        cars.speed_value1 *= 3
+        cars.speed_value2 *= 3
+        speed_expiration = time.time() + 2
+        switch = True
+
+    if switch and time.time() > speed_expiration:
+        cars.speed_value1 = total_speed1 - 0.5
+        cars.speed_value2 = total_speed2 - 1
+        switch = False
+
     if cars.collision(timmy):
         game = False
         writer.clear()
@@ -287,7 +303,13 @@ while game:
     if timmy.ycor() <= -400 or timmy.xcor() >= 400 or timmy.xcor() <= -400:
         timmy.goto(0,-350)
 
-    if current_level == 10:
+    if current_level == 9 and draw_once:
+        food.color((52, 94, 233))
+        food.shape('circle')
+        food.goto(0, 300)
+        draw_once = False
+
+    if timmy.distance(food) < 15 and current_level == 9:
         game = False
         for road in road_list:
             road.clear()
@@ -312,6 +334,7 @@ while game:
         tree_list1.clear()
         tree_list2.clear()
         cars.car_list.clear()
+        food.clear()
         writer.clear()
         screen.bgcolor((0,0,0))
         writer.goto(0,0)
