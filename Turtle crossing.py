@@ -4,6 +4,7 @@ import random
 from Roads import Road
 from Forest import Tree
 from Cars import Car
+from Collectible import Collect
 
 screen = turtle.Screen()
 turtle.colormode(255)
@@ -28,6 +29,18 @@ writer.goto(0,-30)
 writer.write('hold s to go down', align='center', font=("Courier New", 30, "bold"))
 write_list = ['Game Over!','Unlucky...','Try again!']
 
+counting = turtle.Turtle()
+counting.hideturtle()
+counting.penup()
+counting.color((0,0,0))
+counting.goto(270,310)
+
+verdict = turtle.Turtle()
+verdict.hideturtle()
+verdict.penup()
+verdict.color((53,76,188))
+verdict.goto(0,100)
+
 level = turtle.Turtle()
 level.hideturtle()
 level.penup()
@@ -38,6 +51,7 @@ food = turtle.Turtle()
 food.penup()
 food.goto(1000,1000)
 
+base_speed = 2.5
 move_loop1 = False
 move_loop2 = False
 right_loop = False
@@ -55,7 +69,7 @@ def move_stop():
 def movement_up():
     if move_loop1:
         timmy.setheading(90)
-        timmy.forward(2.5)
+        timmy.forward(base_speed)
         screen.ontimer(movement_up,10)
 
 def down_go():
@@ -71,7 +85,7 @@ def down_stop():
 def movement_down():
     if move_loop2:
         timmy.setheading(270)
-        timmy.forward(2.5)
+        timmy.forward(base_speed)
         screen.ontimer(movement_down,10)
 
 #####################################################
@@ -89,7 +103,7 @@ def right_stop():
 def movement_right():
     if right_loop:
         timmy.setheading(0)
-        timmy.forward(2.5)
+        timmy.forward(base_speed)
         screen.ontimer(movement_right,10)
 
 
@@ -108,7 +122,7 @@ def left_stop():
 def movement_left():
     if left_loop:
         timmy.setheading(180)
-        timmy.forward(2.5)
+        timmy.forward(base_speed)
         screen.ontimer(movement_left, 10)
 
 max_road = 2
@@ -153,6 +167,7 @@ for c in range(random.choice(tree_quantity1)):
     tree_list2.append(new_tree)
 
 cars = Car()
+collect = Collect()
 
 screen.listen()
 screen.onkeypress(move_go, 'w')
@@ -169,7 +184,9 @@ screen.onkeyrelease(right_stop, 'd')
 
 start_intro = False
 current_level = 1
+counter = 0
 level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
+counting.write(f'{counter}', align='center', font=("Verdana", 25, "normal"))
 switch = False
 draw_once = True
 game = True
@@ -220,14 +237,22 @@ while game:
             truck.clear()
             truck.hideturtle()
 
+        for black_dots in collect.food_list:
+            black_dots.clear()
+            black_dots.hideturtle()
+
         road_list.clear()
         tree_list1.clear()
         tree_list2.clear()
         cars.car_list.clear()
         cars.truck_list.clear()
+        collect.food_list.clear()
         cars = Car()
 
+        collect.make()
+        collect.position()
         timmy.goto(0, -350)
+        base_speed = 2.5
 
         total_speed1 = cars.speed_value1 + 0.5
         total_speed2 = cars.speed_value2 + 1
@@ -309,6 +334,12 @@ while game:
         food.goto(0, 300)
         draw_once = False
 
+    if collect.collide(timmy):
+        base_speed += 0.03
+        counting.clear()
+        counter += 1
+        counting.write(f'{counter}', align='center', font=("Verdana", 25, "normal"))
+
     if timmy.distance(food) < 15 and current_level == 9:
         game = False
         for road in road_list:
@@ -334,12 +365,17 @@ while game:
         tree_list1.clear()
         tree_list2.clear()
         cars.car_list.clear()
-        food.clear()
+        food.hideturtle()
+        timmy.hideturtle()
         writer.clear()
+        counting.clear()
         screen.bgcolor((0,0,0))
-        writer.goto(0,0)
+        writer.goto(0,200)
         writer.color((255,255,255))
-        writer.write('CONGRATULATIONS! \n you are truly a \n certified turtle crosser', align='center',font=("Courier New", 30, "bold"))
+        writer.write('CONGRATULATIONS!', align='center',font=("Courier New", 60, "bold"))
+        verdict.write('Final verdict...', align='center',font=("Courier New", 45, "bold"))
+        verdict.goto(-50,-150)
+        verdict.write(f'{counter} black dots eaten...', align='center',font=("Courier New", 45, "bold"))
 
     cars.move1()
     cars.move2()
