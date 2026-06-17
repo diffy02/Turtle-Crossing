@@ -17,16 +17,25 @@ timmy.shape('turtle')
 timmy.color((37,105,46))
 timmy.setheading(90)
 timmy.penup()
-timmy.goto(0,-350)
+timmy.goto(0,-325)
+
+arrow = turtle.Turtle()
+arrow.shape('arrow')
+arrow.shapesize(stretch_wid=2,stretch_len=3)
+arrow.color((255,158,26))
+arrow.setheading(90)
+arrow.penup()
+arrow.goto(0,325)
+arrow.hideturtle()
 
 writer = turtle.Turtle()
 writer.hideturtle()
 writer.penup()
 writer.color((255,255,255))
 writer.goto(0,10)
-writer.write('hold w to go up', align='center', font=("Courier New", 30, "bold"))
+writer.write('hold q to turn left', align='center', font=("Courier New", 30, "bold"))
 writer.goto(0,-30)
-writer.write('hold s to go down', align='center', font=("Courier New", 30, "bold"))
+writer.write('hold e to turn right', align='center', font=("Courier New", 30, "bold"))
 write_list = ['Game Over!','Unlucky...','Try again!']
 
 counting = turtle.Turtle()
@@ -54,8 +63,8 @@ food.goto(1000,1000)
 base_speed = 2.5
 move_loop1 = False
 move_loop2 = False
-right_loop = False
-left_loop = False
+turn = 3.5
+
 def move_go():
     global move_loop1
     if not move_loop1:
@@ -68,8 +77,7 @@ def move_stop():
 
 def movement_up():
     if move_loop1:
-        timmy.setheading(90)
-        timmy.forward(base_speed)
+        timmy.left(turn)
         screen.ontimer(movement_up,10)
 
 def down_go():
@@ -84,46 +92,10 @@ def down_stop():
 
 def movement_down():
     if move_loop2:
-        timmy.setheading(270)
-        timmy.forward(base_speed)
+        timmy.right(turn)
         screen.ontimer(movement_down,10)
 
 #####################################################
-
-def right_go():
-    global right_loop
-    if not right_loop:
-        right_loop = True
-        movement_right()
-
-def right_stop():
-    global right_loop
-    right_loop = False
-
-def movement_right():
-    if right_loop:
-        timmy.setheading(0)
-        timmy.forward(base_speed)
-        screen.ontimer(movement_right,10)
-
-
-def left_go():
-    global left_loop
-    if not left_loop:
-        left_loop = True
-        movement_left()
-
-
-def left_stop():
-    global left_loop
-    left_loop = False
-
-
-def movement_left():
-    if left_loop:
-        timmy.setheading(180)
-        timmy.forward(base_speed)
-        screen.ontimer(movement_left, 10)
 
 max_road = 2
 road_list = []
@@ -170,23 +142,21 @@ cars = Car()
 collect = Collect()
 
 screen.listen()
-screen.onkeypress(move_go, 'w')
-screen.onkeyrelease(move_stop, 'w')
+screen.onkeypress(move_go, 'q')
+screen.onkeyrelease(move_stop, 'q')
 
-screen.onkeypress(down_go, 's')
-screen.onkeyrelease(down_stop, 's')
-
-screen.onkeypress(left_go, 'a')
-screen.onkeyrelease(left_stop, 'a')
-
-screen.onkeypress(right_go, 'd')
-screen.onkeyrelease(right_stop, 'd')
+screen.onkeypress(down_go, 'e')
+screen.onkeyrelease(down_stop, 'e')
 
 start_intro = False
 current_level = 1
+last_speed_time1 = 0
+last_speed_time2 = 0
 counter = 0
+counter_score = 0
+requirement = 0
 level.write(f'Level: {current_level}', align='center', font=("Verdana", 30, "normal"))
-counting.write(f'{counter}', align='center', font=("Verdana", 25, "normal"))
+counting.write(f'{counter_score}', align='center', font=("Verdana", 25, "normal"))
 switch = False
 draw_once = True
 game = True
@@ -194,6 +164,17 @@ while game:
     global speed_expiration, total_speed1, total_speed2
     screen.update()
     time.sleep(0.03)
+
+    current_time1 = time.time()
+    if current_time1 - last_speed_time1 >= 0.25:
+        base_speed += 0.05
+        last_speed_time1 = current_time1
+    timmy.forward(base_speed)
+
+    current_time2 = time.time()
+    if current_time2 - last_speed_time2 >= 3:
+        turn += 0.25
+        last_speed_time2 = current_time2
 
     for road in road_list:
         cars.creation(road.ycor(),road.get_height())
@@ -203,11 +184,11 @@ while game:
             if -250 <= timmy.ycor() <= -240:
                 writer.clear()
                 writer.goto(0,0)
-                writer.write('Good job!', align='center', font=("Courier New", 30, "bold"))
+                writer.write('Your speed gets faster \n as time passes', align='center', font=("Courier New", 30, "bold"))
 
             if -100 <= timmy.ycor() <= -90:
                 writer.clear()
-                writer.write('Cars go faster \n the more levels \n you have completed', align='center',font=("Courier New", 20, "bold"))
+                writer.write('Cars and trucks \n gets faster the \n more levels you have completed', align='center',font=("Courier New", 20, "bold"))
 
             if timmy.ycor() >= 150:
                 writer.clear()
@@ -216,7 +197,7 @@ while game:
             if timmy.ycor() >= 250:
                 writer.clear()
 
-    if timmy.ycor() >= 400:
+    if timmy.ycor() >= 375 and (requirement >= 4 or current_level == 1):
         for road in road_list:
             road.clear()
             road.hideturtle()
@@ -251,11 +232,13 @@ while game:
 
         collect.make()
         collect.position()
-        timmy.goto(0, -350)
+        timmy.goto(0, -325)
         base_speed = 2.5
+        turn = 3.5
+        requirement = 0
 
-        total_speed1 = cars.speed_value1 + 0.5
-        total_speed2 = cars.speed_value2 + 1
+        total_speed1 = cars.speed_value1 + 0.75
+        total_speed2 = cars.speed_value2 + 1.5
         cars.chance1 -= 1
 
         for a in range(max_road):
@@ -313,6 +296,28 @@ while game:
         speed_expiration = time.time() + 2
         switch = True
 
+#BARRIERS
+#############################################################
+
+    elif timmy.ycor() >= 375 and requirement < 4:
+        timmy.sety(375)
+        timmy.right(180)
+        base_speed -= 2.25
+    if timmy.ycor() <= -375:
+        timmy.sety(-375)
+        timmy.right(180)
+        base_speed -= 2.25
+    if timmy.xcor() <= -375:
+        timmy.setx(-375)
+        timmy.right(180)
+        base_speed -= 2.25
+    elif timmy.xcor() >= 375:
+        timmy.setx(375)
+        timmy.right(180)
+        base_speed -= 2.25
+
+#############################################################
+
     if switch and time.time() > speed_expiration:
         cars.speed_value1 = total_speed1 - 0.5
         cars.speed_value2 = total_speed2 - 1
@@ -325,9 +330,6 @@ while game:
         writer.color((216,72,101))
         writer.write(f'{random.choice(write_list)}', align='center',font=("Courier New", 45, "bold"))
 
-    if timmy.ycor() <= -400 or timmy.xcor() >= 400 or timmy.xcor() <= -400:
-        timmy.goto(0,-350)
-
     if current_level == 9 and draw_once:
         food.color((52, 94, 233))
         food.shape('circle')
@@ -335,10 +337,16 @@ while game:
         draw_once = False
 
     if collect.collide(timmy):
-        base_speed += 0.03
         counting.clear()
         counter += 1
-        counting.write(f'{counter}', align='center', font=("Verdana", 25, "normal"))
+        requirement += 1
+        counter_score += 10
+        counting.write(f'{counter_score}', align='center', font=("Verdana", 25, "normal"))
+
+    if requirement == 4:
+        arrow.showturtle()
+    elif requirement < 4:
+        arrow.hideturtle()
 
     if timmy.distance(food) < 15 and current_level == 9:
         game = False
